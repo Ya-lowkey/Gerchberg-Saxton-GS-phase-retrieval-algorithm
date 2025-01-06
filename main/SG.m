@@ -1,14 +1,15 @@
 %%
 %--------------------------------------------------------------------------
 % Author: Ya-lowkey (cldeng881@gmail.com)
-% ÏêÏ¸ÍÆµ¼Çë¹Ø×¢Î¢ĞÅ¹«ÖÚºÅ @ÖÇ×Ó¿ÆÆÕ
+% è¯¦ç»†æ¨å¯¼è¯·å…³æ³¨å¾®ä¿¡å…¬ä¼—å· @æ™ºå­ç§‘æ™®
 %--------------------------------------------------------------------------
 %%
-%Ìİ¶ÈÏÂ½µÊµÏÖÏàÎ»»Ö¸´
+%æ¢¯åº¦ä¸‹é™å®ç°ç›¸ä½æ¢å¤
 clc
 clear
 close all
 addpath(genpath('./imgs'))
+addpath(genpath('./function'))
 I2=double(imread('lake.bmp','bmp'));
 I2=I2./max(I2(:));
 [r,c]=size(I2);
@@ -20,16 +21,22 @@ v=zeros(r,c);
 s=zeros(r,c);
 b=0.0001;
 r=1;
+
+wavelen=532e-9;%æ³¢é•¿m
+dist=1;%è¡å°„è·ç¦»m
+pixsize=4e-6;%åƒç´ å°ºå¯¸m
+
 for j=1:100
 A=fft2(aphi);
+%A=propagate(aphi,dist,pixsize,wavelen);%ä»¿çœŸè¡å°„æ—¶é€‰æ‹©è¿™ä¸ªæ­£å‘è¡å°„
 ab=A.*conj(A);
 ab=ab./max(ab(:));
 dA=ab-I2;
-%dphi=real(propagate(dA.*A.*2./(r*c),-dist,pixsize,wavelen).*(-1i*conj(aphi)));%·ÂÕæÑÜÉäÊ±Ñ¡ÔñÕâ¸öÌİ¶È»Ø´«
+%dphi=real(propagate(dA.*A.*2./(r*c),-dist,pixsize,wavelen).*(-1i*conj(aphi)));%ä»¿çœŸè¡å°„æ—¶é€‰æ‹©è¿™ä¸ªæ¢¯åº¦å›ä¼ 
 dphi=real(ifft2(dA.*A.*2./(r*c)).*(-1i*conj(aphi)));
 g=dphi;
 
-%ÆôÓÃ×ÔÊÊÓ¦adamÓÅ»¯
+%å¯ç”¨è‡ªé€‚åº”adamä¼˜åŒ–
 v=beta1*v+(1-beta1)*g;
 s=beta2*s+(1-beta2)*g.^2;
 vc=v./(1-beta1^j);
@@ -39,8 +46,8 @@ phi=phi-m;
 
 aphi=exp(1i*phi);
 subplot(1,2,1)
-imshow(abs(fft2(aphi)).^2,[])
-title('Ã¿´Îµü´úµÄÑÜÉäĞ§¹û')
+imshow(abs(A).^2,[])
+title('æ¯æ¬¡è¿­ä»£çš„è¡å°„æ•ˆæœ')
 subplot(1,2,2)
 plot(j,sum(dA(:).^2)./(r*c),'b.')
 xlabel('iteration')
@@ -49,4 +56,3 @@ hold on
 drawnow
 end
 %imshow(I2)
-
