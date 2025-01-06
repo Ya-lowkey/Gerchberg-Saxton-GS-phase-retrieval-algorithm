@@ -1,96 +1,100 @@
 % =========================================================================
 % Introduction
 % =========================================================================
-% Ä£ÄâÍË»ðËã·¨²»ÊÊÓÃÓÚÕÒ¸ßÎ¬³É±¾º¯Êý×îÐ¡Öµ¶ÔÓ¦µÄÈ«¾Ö×îÓÅ½â£¬¿¼ÂÇ½âµÄ±ä»¯Çø
-% ¼ä¶¼ÔÚ£¨0£¬1£©£¬Ôò1Î¬±äÁ¿xÖÐÃ¿¸öÎÂ¶ÈÐèÒªËÑË÷×ã¹»µÄµã²ÅÄÜÓÐÐ§¸²¸Ç½â£¨ÕâÈ¡
-% ¾öÓÚ±äÁ¿µÄ¾«¶ÈÎ»Êý£©£¬³ÖÐø½µÎÂºó¿ÉÒÔµÃµ½È«¾Ö×îÓÅ½â¡£µ«ÊÇ¶ÔÓÚ25*25=625Î¬Êµ
-% Êý¿Õ¼ä£¬¼ÙÈçÃ¿¸öÎ¬¶ÈËÑË÷100¸öµã£¬ÐèÒªËÑË÷µÄ×ÜµãÊý¾ÍÊÇ100^625¸ö£¬ÏÂÃæµÄ³Ì
-% Ðò¾ÍÊÇÄ£ÄâÕâÒ»³¡¾°£¬Í¼Æ¬µÄÎ¬¶È¼´ÏñËØ¿ÉÒÔ×ÔÐÐµ÷½Ú¡£Òò´Ë¼ÆËãÁ¿ÊÇ·Ç³£¾Þ´óµÄ¡£
+% æ¨¡æ‹Ÿé€€ç«ç®—æ³•ä¸é€‚ç”¨äºŽæ‰¾é«˜ç»´æˆæœ¬å‡½æ•°æœ€å°å€¼å¯¹åº”çš„å…¨å±€æœ€ä¼˜è§£ï¼Œè€ƒè™‘è§£çš„å˜åŒ–åŒº
+% é—´éƒ½åœ¨ï¼ˆ0ï¼Œ1ï¼‰ï¼Œåˆ™1ç»´å˜é‡xä¸­æ¯ä¸ªæ¸©åº¦éœ€è¦æœç´¢è¶³å¤Ÿçš„ç‚¹æ‰èƒ½æœ‰æ•ˆè¦†ç›–è§£ï¼ˆè¿™å–
+% å†³äºŽå˜é‡çš„ç²¾åº¦ä½æ•°ï¼‰ï¼ŒæŒç»­é™æ¸©åŽå¯ä»¥å¾—åˆ°å…¨å±€æœ€ä¼˜è§£ã€‚ä½†æ˜¯å¯¹äºŽ25*25=625ç»´å®ž
+% æ•°ç©ºé—´ï¼Œå‡å¦‚æ¯ä¸ªç»´åº¦æœç´¢100ä¸ªç‚¹ï¼Œéœ€è¦æœç´¢çš„æ€»ç‚¹æ•°å°±æ˜¯100^625ä¸ªï¼Œå› æ­¤è®¡ç®—
+% é‡æ˜¯éžå¸¸å·¨å¤§çš„ã€‚
 
 % Author: Ya-lowkey (cldeng881@gmail.com)
 % =========================================================================
 clc
 clear
+close
 addpath(genpath('./imgs'))
 addpath(genpath('./function'))
-pic1=imread('boat.bmp');
-pic1=double(pic1(:,:,1));
+% pic1=imread('cameraman.bmp');
+  pic1=ones(100,100);
+  pic1(25:75,25:75)=zeros(51,51);
+pic1=double(pic1);
 [row1,col1]=size(pic1);
-sz=25;%ÉèÖÃÄ£ÄâÍË»ðËã·¨ËÑË÷Í¼Æ¬µÄ±äÁ¿Î¬¶È´óÐ¡£¬ÕâÀï¾ÍÊÇ25*25=625¸öÎ¬¶È
-pic1=double(pic1(floor(row1/2)-sz/2:floor(row1/2)+sz/2-1,floor(col1/2)-sz/2:floor(col1/2)+sz/2-1));%µ÷½Ú¼ô²Ã´óÐ¡
-[row,col]=size(pic1);
 imshow(pic1,[])
-%%
-pic1=pic1./250;
+%sz=100;%è®¾ç½®æ¨¡æ‹Ÿé€€ç«ç®—æ³•æœç´¢å›¾ç‰‡çš„å˜é‡ç»´åº¦å¤§å°
+%pic1=double(pic1(floor(row1/2)-sz/2:floor(row1/2)+sz/2-1,floor(col1/2)-sz/2:floor(col1/2)+sz/2-1));%è°ƒèŠ‚å‰ªè£å¤§å°
+[row,col]=size(pic1);
+pic1=pic1;
 wavelen=532e-9;
 dist=1;
 pixsize=4e-6;
 
-T0 = 100;   % ³õÊ¼ÎÂ¶È
-T = T0; % µü´ú³õÊ¼ÎÂ¶ÈT0
-epoch = 5;  % ×î´óµü´ú´ÎÊý
-Lk = 10;  % Ã¿¸öÎÂ¶ÈÏÂµÄµü´ú´ÎÊý
-alfa = 0.95;  % ÎÂ¶ÈË¥¼õÏµÊý
+T0 = 100;   % åˆå§‹æ¸©åº¦
+T = T0; % è¿­ä»£åˆå§‹æ¸©åº¦T0
+epoch =350;  % æœ€å¤§è¿­ä»£æ¬¡æ•°
 
-% Ëæ»úÉú³ÉÒ»¸ö³õÊ¼½â
+Lk = 100;  % æ¯ä¸ªæ¸©åº¦ä¸‹çš„è¿­ä»£æ¬¡æ•°
+alfa =0.95;  % æ¸©åº¦è¡°å‡ç³»æ•°
+
+% éšæœºç”Ÿæˆä¸€ä¸ªåˆå§‹è§£
 x0=rand(row,col);  
 pic0=exp(1i*2*pi*x0);
 I=propagate(pic0,dist,pixsize,wavelen);
-I=abs(I);
-ae=corrcoef(I,pic1)
-y0 = ae(1,2);
-
+y0=sum((I.*conj(I)-pic1).^2,'all')./(row*col);
 min_y = y0;     
-MINY = zeros(epoch,1); 
-
-% Ä£ÄâÍË»ð¹ý³Ì
-for iter = 1 : epoch  % ×Üµü´ú´ÎÊý
+% MINY = zeros(epoch,1); 
+% æ¨¡æ‹Ÿé€€ç«è¿‡ç¨‹
+%%
+for iter = 1 : epoch  % æ€»è¿­ä»£æ¬¡æ•°
     iter
-    for i = 1 : Lk  % Ã¿¸öÎÂ¶ÈÏÂµü´úLk´Î
+    for i = 1 : Lk  % æ¯ä¸ªæ¸©åº¦ä¸‹è¿­ä»£Lkæ¬¡
         
-        z = rand(row,col)-rand(row,col); % ÕýÌ«·Ö²¼µÄ±¶ÂÊ
-        x_new = x0+ z.*(T./T0); % Ëæ»ú¸üÐÂ²úÉú²»³¬¹ý[-1,1]Çø¼äµÄÐÂ×ø±ê
-       [h1,~]=size(x_new(x_new<0));
-       [h2,~]=size(x_new(x_new>1));
-       x_new(x_new<0)=x_new(x_new<0)+ones(h1,1);%½«³¬³ö·¶Î§µÄ×ø±êµãÖÜÆÚÐÔÕÛ»ØÀ´£¬±ÈÈç1.5±ä³É0.5£¬-0.5±ä³É0.5
-       x_new(x_new>1)=x_new(x_new>1)-ones(h2,1);
-       
+        z = (rand(row,col)-rand(row,col)); % å‡åŒ€åˆ†å¸ƒï¼ˆ-1ï¼Œ1ï¼‰
+        x_new = x0+ z*(T./T0); % éšæœºæ›´æ–°äº§ç”Ÿä¸è¶…è¿‡[-1,1]åŒºé—´çš„æ–°åæ ‡
+        x_new(x_new>1)=1;
+        x_new(x_new<0)=0;
+        
         x1 = x_new;    
-           pic0=exp(1i*2*pi*x1);
+           pic0=exp(1i*2*pi*x1./2);
            I=propagate(pic0,dist,pixsize,wavelen);
-           ae=corrcoef(I,pic1);% ¼ÆËãËùÓÐÏñËØµãÎó²î¾ø¶ÔÖµºÍµÄÆ½¾ùÖµ
-        y1 = ae(1,2);  
-        if y1 > y0    % Îó²î½µµÍ×ÔÈ»½ÓÊÜÐÂµã
+        y1=sum((I.*conj(I)-pic1).^2,'all')./(row*col);% è®¡ç®—å‡æ–¹å·®
+        
+        if y1 < y0    % è¯¯å·®é™ä½Žè‡ªç„¶æŽ¥å—æ–°ç‚¹
             x0 = x1; 
             y0 = y1;
-        else
-            p = exp(-(y1- y0)/T); % Îó²îÉý¸ß°´¸ÅÂÊp½ÓÊÜÐÂ×ø±êµã
-            if rand(1) < p   % ´ËÌõ¼þÂú×ãÔò½ÓÊÜÐÂ×ø±êµã£¬Ìõ¼þ»áËæ×ÅÎÂ¶È½µµÍ±äµÃºÜÄÑÂú×ã£¬µ¼ÖÂ×ø±êÎ¬³ÖÔ­×ø±êµã
-                x0 = x1; % ¸üÐÂµ±Ç°½âÎªÐÂ½â
-                y0 = y1;
-            end
+%         else
+%             p = exp(-(y1-y0)/T); % è¯¯å·®å‡é«˜æŒ‰æ¦‚çŽ‡pæŽ¥å—æ–°åæ ‡ç‚¹
+%             if rand(1) < p   % æ­¤æ¡ä»¶æ»¡è¶³åˆ™æŽ¥å—æ–°åæ ‡ç‚¹ï¼Œæ¡ä»¶ä¼šéšç€æ¸©åº¦é™ä½Žå˜å¾—å¾ˆéš¾æ»¡è¶³ï¼Œå¯¼è‡´åæ ‡ç»´æŒåŽŸåæ ‡ç‚¹
+%                 x0 = x1; % æ›´æ–°å½“å‰è§£ä¸ºæ–°è§£
+%                 y0 = y1;
+%             end
         end
         
-        if y0 > min_y  % Í¨¹ýÇ°ºó±È½Ï£¬´æ´¢¸ÃÎÂ¶ÈÏÂµÄ×îÐ¡Öµ
+        if y0 < min_y  % é€šè¿‡å‰åŽæ¯”è¾ƒï¼Œå­˜å‚¨è¯¥æ¸©åº¦ä¸‹çš„æœ€å°å€¼
             min_y = y0;  
-            best_x = x0;  
+            best_x = x0; 
         end
     end
-    MINY(iter) = min_y; % ±£´æÃ¿¸öÎÂ¶Èµü´úÏÂµÃµ½µÄ×îÐ¡ÖµÎó²î
-    T = alfa*T;   % ÎÂ¶È°´Ë¥¼õÂÊÏÂ½µ£¬Öð½¥½Ó½ü0
-   
+    if iter>50
+        alfa=0.99; % æ¸©åº¦æŒ‰è¡°å‡çŽ‡ä¸‹é™ï¼Œé€æ¸æŽ¥è¿‘0
+        Lk=150;
+    end  
+     if iter>300
+         Lk=350;
+         alfa=0.999;
+     end
+    MINY(iter) = min_y; % ä¿å­˜æ¯ä¸ªæ¸©åº¦è¿­ä»£ä¸‹å¾—åˆ°çš„æœ€å°å€¼è¯¯å·®
+    T=T*alfa
 end
-%»æÖÆÏà¹ØÏµÊýÇúÏß£¬Ô½½Ó½ü1´ú±í½á¹¹ÏàËÆ¶ÈÔ½¸ß
- plot(1:epoch,MINY,'b*-')
- xlabel('iteration')
- ylabel('ae')
-
- %% 
- pic0=exp(1i*2*pi*best_x);
- I=propagate(pic0,dist,pixsize,wavelen);
- I=abs(I)./max(max(abs(I)));
- I=imresize(I,[1024,1024]);
- imshow(I)
+%%
+subplot(2,1,1)
+plot(1:iter,MINY,'b-')
+    xlabel('iteration')
+    ylabel('MSE')
+    axis([0,epoch,0,1.2])
+subplot(2,1,2)
+imshow(abs(I).^2,[])
+title('è¡å°„æ•ˆæžœ')
+set(gcf,'color','w')
 
 
 
